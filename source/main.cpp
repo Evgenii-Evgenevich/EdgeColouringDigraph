@@ -1,17 +1,12 @@
 #include <iostream> 
 #include <vector> 
 
-#define STRUCTEDGET 1 
 
-#if STRUCTEDGET 
 struct edge_t 
 {
 	unsigned short home; 
 	unsigned short away; 
 }; 
-#else 
-using edge_t = unsigned short[2]; 
-#endif // STRUCTEDGET 
 
 
 int main(int agrc, char* argv[])
@@ -43,13 +38,8 @@ int main(int agrc, char* argv[])
 
 			{
 				edge_t edgeEni; 
-#if STRUCTEDGET 
 				edgeEni.home = uLast; 
 				edgeEni.away = i; 
-#else 
-				edgeEni[0] = uLast; 
-				edgeEni[1] = i; 
-#endif // STRUCTEDGET 
 
 				factorFi.push_back(edgeEni); 
 			}
@@ -57,13 +47,8 @@ int main(int agrc, char* argv[])
 			for (unsigned k = 1; k < uK; ++k) 
 			{
 				edge_t edgeEik; 
-#if STRUCTEDGET 
 				edgeEik.home = (i + k + uLast) % uLast; 
 				edgeEik.away = (i - k + uLast) % uLast; 
-#else 
-				edgeEik[0] = (i + k + uLast) % uLast; 
-				edgeEik[1] = (i - k + uLast) % uLast; 
-#endif // STRUCTEDGET 
 
 				factorFi.push_back(edgeEik); 
 			}
@@ -81,11 +66,7 @@ int main(int agrc, char* argv[])
 				edge_t& edgeEni = vectorFactors[i][0];
 				if (i & 1) // if i is odd 
 				{
-#if STRUCTEDGET 
 					std::swap(edgeEni.home, edgeEni.away); 
-#else 
-					std::swap(edgeEni[0], edgeEni[1]); 
-#endif // STRUCTEDGET 
 				}
 				else
 				{
@@ -98,11 +79,7 @@ int main(int agrc, char* argv[])
 				edge_t& edgeEik = vectorFactors[i][k];
 				if (k & 1) // if k is odd 
 				{
-#if STRUCTEDGET 
-					std::swap(edgeEik.home, edgeEik.away);
-#else 
-					std::swap(edgeEik[0], edgeEik[1]);
-#endif // STRUCTEDGET 
+					std::swap(edgeEik.home, edgeEik.away); 
 				}
 				else 
 				{
@@ -113,15 +90,17 @@ int main(int agrc, char* argv[])
 	}
 
 	// step 3 
-	for (auto fi = vectorFactors.begin(); fi != vectorFactors.end(); ++fi)
 	{
-		factor_t& factorFi = *fi;
-		for (auto ei = factorFi.begin(); ei != factorFi.end(); ++ei)
+		for (auto fi = vectorFactors.begin(); fi != vectorFactors.end(); ++fi) 
 		{
-			edge_t& edgeEi = *ei;
-			std::cout << ' ' << edgeEi.home << " -> " << edgeEi.away << ";\t";
+			factor_t& factorFi = *fi; 
+			for (auto ei = factorFi.begin(); ei != factorFi.end(); ++ei) 
+			{
+				edge_t& edgeEi = *ei; 
+				std::cout << ' ' << edgeEi.home << " -> " << edgeEi.away << ";\t"; 
+			}
+			std::cout << std::endl; 
 		}
-		std::cout << std::endl;
 	}
 
 	return 0;
